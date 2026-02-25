@@ -10,7 +10,9 @@ export const generateToken = (paylaod) => {
     .sign(secretKey);
 };
 export const verifyToken = async (token: string) => {
-  const secretKey = createSecretKey(process.env.JWT_SECRET, "utf-8");
+  const secret =
+    process.env.JWT_SECRET || process.env.secret || "";
+  const secretKey = createSecretKey(secret, "utf-8");
   const { payload } = await jwtVerify(token, secretKey);
   return payload;
 };
