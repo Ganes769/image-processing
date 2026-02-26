@@ -14,13 +14,14 @@ router.post(
     { name: "file", maxCount: 1 },
   ]),
   (req, _res, next) => {
-    // Normalize to `req.file` so controllers can keep using single-file logic.
-    const files = req.files as Record<string, Express.Multer.File[]> | undefined;
+    const files = req.files as
+      | Record<string, Express.Multer.File[]>
+      | undefined;
     const file = files?.image?.[0] ?? files?.file?.[0];
     if (file) (req as unknown as { file?: Express.Multer.File }).file = file;
     next();
   },
-  uploadImage
+  uploadImage,
 );
 
 router.use((err: unknown, _req: unknown, res: any, next: any) => {

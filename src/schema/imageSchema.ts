@@ -23,6 +23,7 @@ export const images = pgTable(
     width: integer("width"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     height: integer("height"),
+    url: text("url").notNull(),
   },
   (t) => ({
     userIdIdx: uniqueIndex("images_user_id_id_unique").on(t.userId, t.id),
