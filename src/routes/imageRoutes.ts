@@ -26,7 +26,6 @@ router.post(
 
 router.use((err: unknown, _req: unknown, res: any, next: any) => {
   if (err instanceof multer.MulterError) {
-    // `Unexpected field` happens when the client uses a different form field name.
     return res.status(400).json({
       message: err.message,
       expected_fields: ["image", "file"],

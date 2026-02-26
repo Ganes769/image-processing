@@ -3,6 +3,6 @@ import { imageTrnsform } from "../controllers/imageTransForm";
 
 const router = Router();
 
-router.post("/", imageTrnsform);
+router.post("/image/:id/transform", imageTrnsform);
 export default router;
-export { Router };
+export { router };
