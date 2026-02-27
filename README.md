@@ -6,18 +6,20 @@ A REST API for uploading, transforming, and managing images — built with **Nod
 
 ---
 
+https://roadmap.sh/projects/image-processing-service
+
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js + TypeScript |
-| Framework | Express |
-| Image Processing | Sharp |
-| Cloud Storage | Cloudinary |
-| Database | PostgreSQL |
-| ORM | Drizzle ORM |
-| Auth | JWT (jose) |
-| Password Hashing | bcrypt |
+| Layer            | Technology           |
+| ---------------- | -------------------- |
+| Runtime          | Node.js + TypeScript |
+| Framework        | Express              |
+| Image Processing | Sharp                |
+| Cloud Storage    | Cloudinary           |
+| Database         | PostgreSQL           |
+| ORM              | Drizzle ORM          |
+| Auth             | JWT (jose)           |
+| Password Hashing | bcrypt               |
 
 ---
 
@@ -86,6 +88,7 @@ Server starts at `http://localhost:3000`.
 ## API Reference
 
 All protected routes require the header:
+
 ```
 Authorization: Bearer <token>
 ```
@@ -95,17 +98,22 @@ Authorization: Bearer <token>
 ### Auth
 
 #### Register
+
 ```
 POST /api/auth/register
 ```
+
 **Body:**
+
 ```json
 {
   "username": "john",
   "password": "secret123"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "User created successfully",
@@ -117,17 +125,22 @@ POST /api/auth/register
 ---
 
 #### Login
+
 ```
 POST /api/auth/login
 ```
+
 **Body:**
+
 ```json
 {
   "username": "john",
   "password": "secret123"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "login success",
@@ -140,14 +153,17 @@ POST /api/auth/login
 ### Images
 
 #### Upload Image
+
 ```
 POST /api/images/upload
 ```
+
 - Protected
 - Content-Type: `multipart/form-data`
 - Field name: `image` or `file`
 
 **Response:**
+
 ```json
 {
   "message": "Image uploaded successfully",
@@ -160,18 +176,21 @@ POST /api/images/upload
 ### Transformations
 
 #### Transform an Image
+
 ```
 POST /api/image/:id/transform
 ```
+
 - Protected
 - `:id` — the original image id
 
 **Body (all fields optional):**
+
 ```json
 {
   "transformation": {
     "resize": { "width": 300, "heigth": 300 },
-    "crop":   { "width": 200, "height": 200, "left": 10, "top": 10 },
+    "crop": { "width": 200, "height": 200, "left": 10, "top": 10 },
     "rotate": 90,
     "format": "webp",
     "filters": {
@@ -185,6 +204,7 @@ POST /api/image/:id/transform
 Supported formats: `jpeg`, `jpg`, `png`, `webp`, `avif`
 
 **Response:**
+
 ```json
 {
   "id": 1,
@@ -202,17 +222,20 @@ Supported formats: `jpeg`, `jpg`, `png`, `webp`, `avif`
 ---
 
 #### Get All Transformed Images (Paginated)
+
 ```
 GET /api/images?page=1&limit=10
 ```
+
 - Protected
 
-| Query Param | Default | Max |
-|---|---|---|
-| `page` | `1` | — |
-| `limit` | `10` | `100` |
+| Query Param | Default | Max   |
+| ----------- | ------- | ----- |
+| `page`      | `1`     | —     |
+| `limit`     | `10`    | `100` |
 
 **Response:**
+
 ```json
 {
   "data": [ { "id": 1, "imageId": 3, "userId": 1, "url": "...", ... } ],
@@ -228,13 +251,16 @@ GET /api/images?page=1&limit=10
 ---
 
 #### Get Transformed Images by Original Image ID
+
 ```
 GET /api/images/:id
 ```
+
 - Protected
 - `:id` — the original image id
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -273,9 +299,9 @@ transformed_images
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start dev server with hot reload |
+| Command               | Description                      |
+| --------------------- | -------------------------------- |
+| `npm run dev`         | Start dev server with hot reload |
 | `npm run db:generate` | Generate Drizzle migration files |
-| `npm run db:migrate` | Apply migrations to the database |
-| `npm run db:studio` | Open Drizzle Studio (DB GUI) |
+| `npm run db:migrate`  | Apply migrations to the database |
+| `npm run db:studio`   | Open Drizzle Studio (DB GUI)     |
