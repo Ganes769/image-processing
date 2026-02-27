@@ -14,11 +14,11 @@ router.post(
     { name: "file", maxCount: 1 },
   ]),
   (req, _res, next) => {
-    const files = req.files as
-      | Record<string, Express.Multer.File[]>
+    const files = (req as any).files as
+      | Record<string, { buffer: Buffer; originalname: string; mimetype: string; size: number }[]>
       | undefined;
     const file = files?.image?.[0] ?? files?.file?.[0];
-    if (file) (req as unknown as { file?: Express.Multer.File }).file = file;
+    if (file) (req as any).file = file;
     next();
   },
   uploadImage,
