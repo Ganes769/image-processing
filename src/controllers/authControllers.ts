@@ -28,8 +28,8 @@ export const register = async (req, res) => {
       })
       .returning();
     const token = await generateToken({
-      username: username,
-      password: hashpassword,
+      id: user.id,
+      username: user.username,
     });
 
     return res.status(201).json({

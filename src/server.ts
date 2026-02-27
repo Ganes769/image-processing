@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
-app.use(imageTransFromRoute);
+app.use("/api", imageTransFromRoute);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 export { app };
 export default { app };

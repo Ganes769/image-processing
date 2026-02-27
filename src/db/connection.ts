@@ -1,6 +1,10 @@
 import pg from "pg";
 import dotenv from "dotenv";
-import * as schema from "../schema/userSchema";
+import * as userSchema from "../schema/userSchema";
+import * as imageSchema from "../schema/imageSchema";
+import * as transformationSchema from "../schema/transformation";
+
+const schema = { ...userSchema, ...imageSchema, ...transformationSchema };
 import { drizzle } from "drizzle-orm/node-postgres";
 dotenv.config();
 

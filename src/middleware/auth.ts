@@ -13,7 +13,7 @@ export const protect = async (
     }
     const token = authHeader.slice(7);
     const payload = await verifyToken(token);
-    (req as Request & { user?: object }).user = payload;
+    (req as Request & { user?: Record<string, unknown> }).user = payload as Record<string, unknown>;
     next();
   } catch {
     return res.status(401).json({ message: "Invalid or expired token." });
