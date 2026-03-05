@@ -4,7 +4,7 @@ import { cloudinary } from "../config/cloudinary";
 import { images } from "../schema/imageSchema";
 import { db } from "../db/connection";
 
-interface RequestWithFile extends Request {
+type RequestWithFile = Omit<Request, "file"> & {
   file?: {
     buffer: Buffer;
     originalname: string;
@@ -12,7 +12,7 @@ interface RequestWithFile extends Request {
     size?: number;
   };
   user?: { id: number };
-}
+};
 
 export const uploadImage = async (req: RequestWithFile, res: Response) => {
   try {
