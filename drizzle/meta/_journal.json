@@ -15,6 +15,13 @@
       "when": 1772147452756,
       "tag": "0001_illegal_impossible_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792677350162,
+      "tag": "0002_awesome_cloak",
+      "breakpoints": true
     }
   ]
 }

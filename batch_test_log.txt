@@ -1,0 +1,23 @@
+BATCH TEST LOG
+
+--- CASE 1 valid jpeg upload ---
+HTTP_STATUS:201
+BODY:{"message":"Image uploaded successfully","image":{"id":8,"userId":2,"fileName":"sample.jpg","mimeType":"image/jpeg","sizeBytes":3117,"publicId":"image-processing/gy2cxcploixxrufihvc4","width":800,"createdAt":"2026-10-22T14:57:45.624Z","height":600,"url":"https://res.cloudinary.com/df9sy6tw7/image/upload/v1792677465/image-processing/gy2cxcploixxrufihvc4.jpg"},"url":"https://res.cloudinary.com/df9sy6tw7/image/upload/v1792677465/image-processing/gy2cxcploixxrufihvc4.jpg"}
+OUTCOME:success
+
+--- CASE 2 resize 300x300 webp ---
+HTTP_STATUS:200
+BODY:{"id":5,"url":"https://res.cloudinary.com/df9sy6tw7/image/upload/v1792677466/transformed-images/uii1fpfobpop4mlka9au.webp","public_id":"transformed-images/uii1fpfobpop4mlka9au","format":"webp","bytes":244,"width":300,"height":300,"imageId":8,"userId":2}
+OUTCOME:success
+
+--- CASE 3 invalid txt upload ---
+HTTP_STATUS:400
+BODY:{"message":"Only jpg, png, webp images are allowed"}
+OUTCOME:expected failure
+
+--- CASE 4 unexpected field name ---
+HTTP_STATUS:400
+BODY:{"message":"Unexpected field","expected_fields":["image","file"]}
+OUTCOME:expected failure
+
+Done. See batch_test_log.txt and transformed_outputs/

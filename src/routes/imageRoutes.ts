@@ -31,6 +31,9 @@ router.use((err: unknown, _req: unknown, res: any, next: any) => {
       expected_fields: ["image", "file"],
     });
   }
+  if (err instanceof Error && /jpg|png|webp|images are allowed/i.test(err.message)) {
+    return res.status(400).json({ message: err.message });
+  }
   return next(err);
 });
 

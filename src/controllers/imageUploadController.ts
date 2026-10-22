@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { Readable } from "stream";
-import { cloudinary } from "../config/cloudinary";
+import { getCloudinary } from "../config/cloudinary";
 import { images } from "../schema/imageSchema";
 import { db } from "../db/connection";
 
@@ -46,7 +46,7 @@ export const uploadImage = async (req: RequestWithFile, res: Response) => {
       height: number;
       format: string;
     }>((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
+      const stream = getCloudinary().uploader.upload_stream(
         {
           folder: "image-processing",
           resource_type: "image",

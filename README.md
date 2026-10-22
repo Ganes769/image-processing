@@ -2,12 +2,6 @@
 
 A REST API for uploading, transforming, and managing images — built with **Node.js**, **Express**, **Sharp**, **Cloudinary**, and **PostgreSQL** (via Drizzle ORM).
 
-**Repository:** [https://github.com/Ganes769/image-processing](https://github.com/Ganes769/image-processing)
-
----
-
-https://roadmap.sh/projects/image-processing-service
-
 ## Tech Stack
 
 | Layer            | Technology           |
@@ -34,7 +28,6 @@ https://roadmap.sh/projects/image-processing-service
 ### Installation
 
 ```bash
-git clone https://github.com/Ganes769/image-processing.git
 cd image-processing
 npm install
 ```
@@ -162,13 +155,30 @@ POST /api/images/upload
 - Content-Type: `multipart/form-data`
 - Field name: `image` or `file`
 
-**Response:**
+**Success (201):**
 
 ```json
 {
   "message": "Image uploaded successfully",
   "image": { "id": 3, "url": "https://res.cloudinary.com/...", ... }
 }
+```
+
+**Errors:**
+
+| Status | When |
+|--------|------|
+| 400 | Missing file, wrong field name, or file is not jpg/png/webp |
+| 401 | Missing or invalid JWT |
+
+Example 400 bodies:
+
+```json
+{ "message": "Only jpg, png, webp images are allowed" }
+```
+
+```json
+{ "message": "Unexpected field", "expected_fields": ["image", "file"] }
 ```
 
 ---

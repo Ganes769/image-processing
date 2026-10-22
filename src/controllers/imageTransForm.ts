@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import sharp from "sharp";
 import { getImageById } from "../utils/getImageById";
-import { cloudinary } from "../config/cloudinary";
+import { getCloudinary } from "../config/cloudinary";
 import { db } from "../db/connection";
 import { transformedImages } from "../schema/transformation";
 
@@ -20,7 +20,7 @@ function uploadToCloudinary(
   opts: Record<string, unknown>,
 ) {
   return new Promise<any>((resolve, reject) => {
-    const uploadStream = (cloudinary.uploader.upload_stream as any)(
+    const uploadStream = (getCloudinary().uploader.upload_stream as any)(
       opts,
       (err: Error | null, result: any) => {
         if (err) return reject(err);
