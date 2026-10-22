@@ -155,27 +155,31 @@ POST /api/images/upload
 - Content-Type: `multipart/form-data`
 - Field name: `image` or `file`
 
+**Status codes:**
+
+| Status | When |
+|--------|------|
+| 201 | Image uploaded |
+| 400 | Missing file, wrong field name (`photo`), or file is not jpg/png/webp |
+| 401 | Missing or invalid JWT |
+| 500 | Upload/storage failed |
+
 **Success (201):**
 
 ```json
 {
   "message": "Image uploaded successfully",
-  "image": { "id": 3, "url": "https://res.cloudinary.com/...", ... }
+  "image": { "id": 3, "url": "https://res.cloudinary.com/...", "width": 800, "height": 600 }
 }
 ```
 
-**Errors:**
-
-| Status | When |
-|--------|------|
-| 400 | Missing file, wrong field name, or file is not jpg/png/webp |
-| 401 | Missing or invalid JWT |
-
-Example 400 bodies:
+**Error (400) — not an image:**
 
 ```json
 { "message": "Only jpg, png, webp images are allowed" }
 ```
+
+**Error (400) — unexpected field:**
 
 ```json
 { "message": "Unexpected field", "expected_fields": ["image", "file"] }
@@ -213,7 +217,17 @@ POST /api/image/:id/transform
 
 Supported formats: `jpeg`, `jpg`, `png`, `webp`, `avif`
 
-**Response:**
+**Status codes:**
+
+| Status | When |
+|--------|------|
+| 200 | Transform succeeded |
+| 401 | Missing or invalid JWT |
+| 404 | Original image id not found |
+| 502 | Could not fetch the original image |
+| 500 | Transform/storage failed |
+
+**Success (200):**
 
 ```json
 {
@@ -221,12 +235,24 @@ Supported formats: `jpeg`, `jpg`, `png`, `webp`, `avif`
   "url": "https://res.cloudinary.com/.../transformed-images/...",
   "public_id": "transformed-images/abc123",
   "format": "webp",
-  "bytes": 45231,
+  "bytes": 244,
   "width": 300,
   "height": 300,
   "imageId": 3,
   "userId": 1
 }
+```
+
+**Error (401):**
+
+```json
+{ "message": "Unauthorized" }
+```
+
+**Error (404):**
+
+```json
+{ "message": "image not found" }
 ```
 
 ---

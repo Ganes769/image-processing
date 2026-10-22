@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Image Processing API</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 860px; margin: 32px auto; padding: 0 20px; color: #111; line-height: 1.45; }
+    h1, h2, h3 { margin-top: 1.6em; }
+    code, pre { font-family: ui-monospace, Menlo, monospace; }
+    pre { background: #f4f4f4; padding: 12px; overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; }
+    th { background: #f0f0f0; }
+    .ok { color: #0a7a28; font-weight: 700; }
+    .bad { color: #b42318; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>Image Processing API</h1>
+  <p>Local docs for upload and transform. Compare these shapes to <code>batch_test_log.txt</code>.</p>
+
+  <h2>Upload</h2>
+  <pre>POST /api/images/upload</pre>
+  <p>Protected. multipart field name: <code>image</code> or <code>file</code>. Types: jpg, png, webp.</p>
+
+  <p class="ok">Success 201</p>
+  <pre>{
+  "message": "Image uploaded successfully",
+  "image": { "id": 3, "url": "...", "width": 800, "height": 600 }
+}</pre>
+
+  <p class="bad">Errors</p>
+  <table>
+    <tr><th>Status</th><th>When</th><th>Example body</th></tr>
+    <tr><td>400</td><td>Not jpg/png/webp</td><td><code>{"message":"Only jpg, png, webp images are allowed"}</code></td></tr>
+    <tr><td>400</td><td>Wrong field name</td><td><code>{"message":"Unexpected field","expected_fields":["image","file"]}</code></td></tr>
+    <tr><td>401</td><td>Missing/invalid JWT</td><td><code>{"message":"Access denied. No token provided."}</code></td></tr>
+  </table>
+
+  <h2>Transform</h2>
+  <pre>POST /api/image/:id/transform</pre>
+  <p>Protected. <code>:id</code> is the original image id.</p>
+  <pre>{
+  "transformation": {
+    "resize": { "width": 300, "heigth": 300 },
+    "format": "webp"
+  }
+}</pre>
+
+  <p class="ok">Success 200</p>
+  <pre>{
+  "id": 1,
+  "url": "...",
+  "format": "webp",
+  "width": 300,
+  "height": 300
+}</pre>
+
+  <p class="bad">Errors</p>
+  <table>
+    <tr><th>Status</th><th>When</th><th>Example body</th></tr>
+    <tr><td>401</td><td>Missing/invalid JWT</td><td><code>{"message":"Unauthorized"}</code></td></tr>
+    <tr><td>404</td><td>Image id not found</td><td><code>{"message":"image not found"}</code></td></tr>
+    <tr><td>502</td><td>Could not fetch original</td><td><code>{"message":"Failed to fetch image"}</code></td></tr>
+    <tr><td>500</td><td>Transform failed</td><td><code>{"message":"Server error"}</code></td></tr>
+  </table>
+
+  <p>Supported formats: jpeg, jpg, png, webp, avif.</p>
+</body>
+</html>
