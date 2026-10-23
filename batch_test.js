@@ -4,7 +4,6 @@ const sharp = require("sharp");
 
 const BASE = "http://localhost:3000";
 const LOG_PATH = "batch_test_log.txt";
-const OUT_DIR = "transformed_outputs";
 const FIXTURES = "fixtures";
 const USER = { username: "odinuser", password: "secret123" };
 
@@ -22,7 +21,6 @@ function formFile(field, filePath, type) {
 
 async function ensureFixtures() {
   fs.mkdirSync(FIXTURES, { recursive: true });
-  fs.mkdirSync(OUT_DIR, { recursive: true });
 
   const jpg = path.join(FIXTURES, "sample.jpg");
   const txt = path.join(FIXTURES, "bad.txt");
@@ -63,7 +61,9 @@ async function getToken() {
   });
   const registerBody = await register.json().catch(() => ({}));
   if (!registerBody.token) {
-    throw new Error(`Could not get auth token: ${JSON.stringify(registerBody)}`);
+    throw new Error(
+      `Could not get auth token: ${JSON.stringify(registerBody)}`,
+    );
   }
   return registerBody.token;
 }
@@ -92,14 +92,18 @@ async function main() {
   const token = await getToken();
   const auth = { Authorization: `Bearer ${token}` };
 
-  const upload = await runCase("CASE 1 valid jpeg upload", "success", async () => {
-    const res = await fetch(`${BASE}/api/images/upload`, {
-      method: "POST",
-      headers: auth,
-      body: formFile("image", jpg, "image/jpeg"),
-    });
-    return { status: res.status, body: await res.text() };
-  });
+  const upload = await runCase(
+    "CASE 1 valid jpeg upload",
+    "success",
+    async () => {
+      const res = await fetch(`${BASE}/api/images/upload`, {
+        method: "POST",
+        headers: auth,
+        body: formFile("image", jpg, "image/jpeg"),
+      });
+      return { status: res.status, body: await res.text() };
+    },
+  );
 
   if (!upload.passed) {
     throw new Error(
@@ -125,16 +129,10 @@ async function main() {
     });
     const body = await res.text();
     try {
-      const json = JSON.parse(body);
-      if (json.url) {
-        const img = await fetch(json.url);
-        fs.writeFileSync(
-          path.join(OUT_DIR, "sample_300.webp"),
-          Buffer.from(await img.arrayBuffer()),
-        );
-      }
+      const url = JSON.parse(body).url;
+      if (url) log("TRANSFORM_URL:" + url);
     } catch {
-      // keep the raw body in the log even if download fails
+      // keep the raw body in the log
     }
     return { status: res.status, body };
   });
@@ -157,7 +155,10 @@ async function main() {
     return { status: res.status, body: await res.text() };
   });
 
-  log("\nDone. See batch_test_log.txt and transformed_outputs/");
+  log("\nDone. See batch_test_log.txt");
+  log(
+    'mkdir -p transformed_outputs && curl -o transformed_outputs/sample_300.webp "$TRANSFORM_URL"',
+  );
 }
 
 main().catch((err) => {
